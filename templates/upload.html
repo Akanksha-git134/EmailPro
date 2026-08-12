@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}EmailPro - Upload{% endblock %}
+{% block content %}
+
+<section class="page-header">
+  <h1>Upload contact database</h1>
+  <p class="subtitle">Bring in a CSV and get it ready for AI classification.</p>
+</section>
+
+<section class="card-grid stats-grid">
+  <div class="card stat-card">
+    <div class="card-icon">◧</div>
+    <div class="stat-value">{{ stats.uploaded_files }}</div>
+    <div class="stat-label">Uploaded Files</div>
+  </div>
+  <div class="card stat-card">
+    <div class="card-icon">✉</div>
+    <div class="stat-value">{{ stats.total_emails }}</div>
+    <div class="stat-label">Total Emails</div>
+  </div>
+  <div class="card stat-card">
+    <div class="card-icon">◫</div>
+    <div class="stat-value">{{ stats.size_kb }} KB</div>
+    <div class="stat-label">Database Size</div>
+  </div>
+</section>
+
+<section class="panel">
+  <form method="POST" enctype="multipart/form-data">
+    <div class="dropzone">
+      <div class="card-icon">◧</div>
+      <h3>Select CSV File</h3>
+      <p class="muted">Choose your email database file.</p>
+      <input type="file" name="csv_file" accept=".csv" required>
+    </div>
+    <button type="submit" class="btn btn-primary btn-block">Upload database</button>
+  </form>
+
+  <div class="info-box">
+    <h4>Supported format</h4>
+    <ul>
+      <li>CSV (.csv) files only</li>
+      <li>One email per row recommended</li>
+      <li>Duplicate emails will be removed automatically</li>
+      <li>UTF-8 encoding recommended</li>
+      <li>Uploaded file is stored as Email.csv</li>
+    </ul>
+  </div>
+</section>
+
+{% endblock %}

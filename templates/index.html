@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}EmailPro - Home{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div class="ripple" aria-hidden="true">
+    <span class="ring r1"></span><span class="ring r2"></span><span class="ring r3"></span><span class="ring r4"></span>
+  </div>
+  <p class="eyebrow">Outreach, sent with intent</p>
+  <h1>Campaigns that <em>resonate</em></h1>
+  <p class="subtitle">
+    Upload a contact list, let AI tell business buyers from individual ones,
+    and send a tracked Gmail campaign — start to finish, one dashboard.
+  </p>
+  <div class="hero-actions">
+    <a href="{{ url_for('upload') }}" class="btn btn-primary">Upload database</a>
+    <a href="{{ url_for('classify') }}" class="btn btn-outline">Run AI classification</a>
+  </div>
+</section>
+
+<section>
+  <h2 class="section-title">Quick actions</h2>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">◧</div>
+      <h3>Upload contacts</h3>
+      <p>Bring in a CSV of customer or buyer emails.</p>
+      <a href="{{ url_for('upload') }}" class="btn btn-primary btn-sm">Upload</a>
+    </div>
+    <div class="card">
+      <div class="card-icon">◨</div>
+      <h3>Remove duplicates</h3>
+      <p>Duplicate addresses are cleared from your list automatically.</p>
+      <a href="{{ url_for('upload') }}" class="btn btn-primary btn-sm">Clean list</a>
+    </div>
+    <div class="card">
+      <div class="card-icon">◎</div>
+      <h3>Classify with AI</h3>
+      <p>Sort contacts into business and individual recipients.</p>
+      <a href="{{ url_for('classify') }}" class="btn btn-primary btn-sm">Classify</a>
+    </div>
+    <div class="card">
+      <div class="card-icon">↗</div>
+      <h3>Send a campaign</h3>
+      <p>Reach your chosen audience with tracking built in.</p>
+      <a href="{{ url_for('send_mail') }}" class="btn btn-primary btn-sm">Send emails</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2 class="section-title">How a campaign moves</h2>
+  <div class="workflow">
+    <div class="workflow-step"><span class="step-num">1</span><p>Upload contacts</p></div>
+    <div class="workflow-step"><span class="step-num">2</span><p>Remove duplicates</p></div>
+    <div class="workflow-step"><span class="step-num">3</span><p>Classify with AI</p></div>
+    <div class="workflow-step"><span class="step-num">4</span><p>Choose an audience</p></div>
+    <div class="workflow-step"><span class="step-num">5</span><p>Send the campaign</p></div>
+  </div>
+</section>
+
+<section>
+  <h2 class="section-title">What's under the hood</h2>
+  <div class="card-grid">
+    <div class="card feature-card">
+      <h3>Sends as you, safely</h3>
+      <p>Gmail App Password authentication — your real password never touches this app or its source code.</p>
+    </div>
+    <div class="card feature-card">
+      <h3>AI tells buyers apart</h3>
+      <p>Gemini reads each address and sorts business from individual — no manual tagging.</p>
+    </div>
+    <div class="card feature-card">
+      <h3>Every send, accounted for</h3>
+      <p>Delivered and failed counts update live, with a CSV you can hand to anyone.</p>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

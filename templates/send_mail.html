@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}EmailPro - Send{% endblock %}
+{% block content %}
+
+<section class="page-header">
+  <h1>Send a campaign</h1>
+  <p class="subtitle">Write your message, choose an audience, and launch it.</p>
+  {% if settings.demo_mode %}
+  <p class="demo-banner">🧪 Demo Mode is ON — this will simulate the send. No real emails will be sent and no Gmail login is used.</p>
+  {% endif %}
+</section>
+
+<section class="card-grid stats-grid">
+  <div class="card stat-card">
+    <div class="stat-value">{{ stats.business }}</div>
+    <div class="stat-label">Business Recipients</div>
+  </div>
+  <div class="card stat-card">
+    <div class="stat-value">{{ stats.individual }}</div>
+    <div class="stat-label">Individual Recipients</div>
+  </div>
+  <div class="card stat-card">
+    <div class="stat-value">{{ stats.total }}</div>
+    <div class="stat-label">Total Available Emails</div>
+  </div>
+</section>
+
+<section class="panel">
+  <h3>Create a campaign</h3>
+  <form method="POST" enctype="multipart/form-data">
+    <label>Email Subject</label>
+    <input type="text" name="subject" placeholder="Enter email subject..." value="{{ settings.default_subject }}">
+
+    <label>Target audience</label>
+    <select name="audience">
+      <option value="individual">Individual Recipients</option>
+      <option value="business">Business Recipients</option>
+      <option value="all">All Recipients</option>
+    </select>
+
+    <label>Email content</label>
+    <textarea name="message" rows="6" placeholder="Write your email message here...">{{ settings.default_message }}</textarea>
+
+    <label>Attachment (optional)</label>
+    <input type="file" name="attachment" accept=".pdf,.ppt,.pptx,.doc,.docx">
+    <p class="muted small">Supported formats: PDF, PowerPoint, Word Documents</p>
+
+    <p class="muted small">Sending Delay: {{ settings.delay }} Seconds Between Emails</p>
+
+    <button type="submit" class="btn btn-primary btn-block">Launch campaign</button>
+  </form>
+</section>
+
+<section>
+  <h2 class="section-title">Campaign Workflow</h2>
+  <div class="workflow">
+    <div class="workflow-step"><span class="step-num">1</span><p>Upload Database</p></div>
+    <div class="workflow-step"><span class="step-num">2</span><p>Remove Duplicates</p></div>
+    <div class="workflow-step"><span class="step-num">3</span><p>AI Classification</p></div>
+    <div class="workflow-step"><span class="step-num">4</span><p>Create Campaign</p></div>
+    <div class="workflow-step"><span class="step-num">5</span><p>Send Emails</p></div>
+  </div>
+</section>
+
+{% endblock %}

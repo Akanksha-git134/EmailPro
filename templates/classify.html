@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}EmailPro - Classify{% endblock %}
+{% block content %}
+
+<section class="page-header">
+  <h1>AI email classification</h1>
+  <p class="subtitle">Split business and individual addresses apart automatically, using Gemini.</p>
+</section>
+
+<section class="panel center-panel">
+  <h3>Start Classification</h3>
+  <p class="muted">Analyse uploaded email addresses and generate categorized business and individual mailing lists.</p>
+  <form method="POST">
+    <button type="submit" class="btn btn-primary">Run AI classification</button>
+  </form>
+</section>
+
+<section class="card-grid stats-grid">
+  <div class="card stat-card">
+    <div class="card-icon">◫</div>
+    <div class="stat-value">{{ stats.business }}</div>
+    <div class="stat-label">Business Emails</div>
+  </div>
+  <div class="card stat-card">
+    <div class="card-icon">◯</div>
+    <div class="stat-value">{{ stats.individual }}</div>
+    <div class="stat-label">Individual Emails</div>
+  </div>
+  <div class="card stat-card">
+    <div class="card-icon">✉</div>
+    <div class="stat-value">{{ stats.total }}</div>
+    <div class="stat-label">Total Classified</div>
+  </div>
+</section>
+
+<section class="panel center-panel">
+  <h3>Ready for the next step??</h3>
+  <p class="muted">Head to the campaign page and send to your chosen audience.</p>
+  <a href="{{ url_for('send_mail') }}" class="btn btn-primary">Continue to campaign</a>
+</section>
+
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}EmailPro - Reports{% endblock %}
+{% block content %}
+
+<section class="page-header">
+  <h1>Campaign report</h1>
+  <p class="subtitle">See delivery results and recipient stats from your latest campaign.</p>
+</section>
+
+<section class="card-grid stats-grid">
+  <div class="card stat-card">
+    <div class="card-icon">✉</div>
+    <div class="stat-value">{{ report.total_emails }}</div>
+    <div class="stat-label">Total Recipients</div>
+  </div>
+  <div class="card stat-card">
+    <div class="card-icon">✓</div>
+    <div class="stat-value">{{ report.success_count }}</div>
+    <div class="stat-label">Delivered</div>
+  </div>
+  <div class="card stat-card">
+    <div class="card-icon">✕</div>
+    <div class="stat-value">{{ report.failed_count }}</div>
+    <div class="stat-label">Failed</div>
+  </div>
+  <div class="card stat-card">
+    <div class="card-icon">%</div>
+    <div class="stat-value">{{ rate }}%</div>
+    <div class="stat-label">Delivery Rate</div>
+  </div>
+</section>
+
+<section class="panel">
+  <h3>Delivery performance</h3>
+  <p class="muted">{{ report.success_count }} out of {{ report.total_emails }} emails were delivered successfully.</p>
+</section>
+
+<section class="card-grid two-col">
+  <div class="card">
+    <h3 class="ok">Delivered</h3>
+    <p class="muted">Successfully reached recipients.</p>
+  </div>
+  <div class="card">
+    <h3 class="bad">Failed</h3>
+    <p class="muted">Emails requiring review or retry.</p>
+  </div>
+</section>
+
+<section class="panel">
+  <h3>Delivery log</h3>
+  <table class="log-table">
+    <thead><tr><th>Email Address</th><th>Status</th></tr></thead>
+    <tbody>
+      {% for e in report.successful_emails %}
+      <tr><td>{{ e }}</td><td class="ok">Sent</td></tr>
+      {% endfor %}
+      {% for e in report.failed_emails %}
+      <tr><td>{{ e }}</td><td class="bad">Failed</td></tr>
+      {% endfor %}
+      {% if not report.successful_emails and not report.failed_emails %}
+      <tr><td colspan="2" class="muted">No campaign has been sent yet.</td></tr>
+      {% endif %}
+    </tbody>
+  </table>
+</section>
+
+<section class="panel center-panel">
+  <h3>Export this report</h3>
+  <p class="muted">Download the full delivery report as a CSV file.</p>
+  <a href="{{ url_for('download_report') }}" class="btn btn-primary">Download report</a>
+</section>
+
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}EmailPro - Settings{% endblock %}
+{% block content %}
+
+<section class="page-header">
+  <h1>System configuration</h1>
+  <p class="subtitle">Review the campaign and automation settings this app is using.</p>
+</section>
+
+<section class="card-grid stats-grid">
+  <div class="card stat-card">
+    <div class="card-icon">✉</div>
+    <div class="stat-value">{{ "Demo Mode" if settings.demo_mode else ("Connected" if settings.smtp_connected else "Not Set") }}</div>
+    <div class="stat-label">SMTP Configuration</div>
+  </div>
+  <div class="card stat-card">
+    <div class="card-icon">◎</div>
+    <div class="stat-value">{{ "Enabled" if settings.gemini_enabled else "Heuristic" }}</div>
+    <div class="stat-label">Gemini AI Classification</div>
+  </div>
+  <div class="card stat-card">
+    <div class="card-icon">↗</div>
+    <div class="stat-value">{{ settings.delay }}s</div>
+    <div class="stat-label">Email Delay</div>
+  </div>
+</section>
+
+<form method="POST">
+  <section class="panel">
+    <h3>Email configuration</h3>
+    <label>Sender Email</label>
+    <input type="email" name="email" value="{{ settings.email }}" placeholder="you@gmail.com">
+
+    <label>App Password</label>
+    <input type="password" name="app_password" placeholder="{{ settings.app_password_masked or 'Enter Gmail App Password' }}">
+    <p class="muted small">Generated from Google Account → Security → App Passwords.</p>
+  </section>
+
+  <section class="panel">
+    <h3>Campaign defaults</h3>
+    <label>Default Subject</label>
+    <input type="text" name="default_subject" value="{{ settings.default_subject }}">
+
+    <label>Default Message</label>
+    <textarea name="default_message" rows="5">{{ settings.default_message }}</textarea>
+
+    <label>Email Delay (Seconds)</label>
+    <input type="number" name="delay" min="1" value="{{ settings.delay }}">
+  </section>
+
+  <section class="panel">
+    <h3>Automation</h3>
+    <div class="toggle-row">
+      <span>Auto Classify Uploaded Emails</span>
+      <input type="checkbox" name="auto_classify" {% if settings.auto_classify %}checked{% endif %}>
+    </div>
+    <div class="toggle-row">
+      <span>Remove Duplicate Emails</span>
+      <input type="checkbox" name="remove_duplicates" {% if settings.remove_duplicates %}checked{% endif %}>
+    </div>
+    <div class="toggle-row">
+      <span>Skip Previously Sent Recipients</span>
+      <input type="checkbox" name="skip_previously_sent" {% if settings.skip_previously_sent %}checked{% endif %}>
+    </div>
+    <p class="muted small">
+      Cross-checks each campaign against the send-history log so a recipient who
+      already received a successful send isn't emailed again. Turn off for an
+      intentional re-send, like a follow-up campaign.
+    </p>
+  </section>
+
+  <section class="panel">
+    <h3>🧪 Demo Mode</h3>
+    <div class="toggle-row">
+      <span>Simulate sending (no Gmail login, no real emails sent)</span>
+      <input type="checkbox" name="demo_mode" {% if settings.demo_mode %}checked{% endif %}>
+    </div>
+    <p class="muted small">
+      When on, campaigns run through the full Upload → Classify → Send → Report flow
+      without connecting to Gmail SMTP at all. Every recipient is marked "sent" and no
+      credentials are required. Turn this off once you add a real Gmail App Password.
+    </p>
+  </section>
+
+  <section class="panel center-panel">
+    <button type="submit" class="btn btn-light">Save settings</button>
+  </section>
+</form>
+
+{% endblock %}
