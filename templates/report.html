@@ -70,4 +70,19 @@
   <a href="{{ url_for('download_report') }}" class="btn btn-primary">Download report</a>
 </section>
 
+<section class="panel center-panel">
+  <h3>Clear test results</h3>
+  <p class="muted">
+    Resets the numbers above. Also clear the send log if these were
+    test sends — otherwise "Skip Previously Sent Recipients" will
+    silently skip these addresses on your next real campaign.
+  </p>
+  <form method="POST" action="{{ url_for('clear_report') }}" onsubmit="return confirm('Clear this report? This cannot be undone.');">
+    <label style="display:block; margin: 10px 0;">
+      <input type="checkbox" name="clear_sent_log"> Also clear the send log
+    </label>
+    <button type="submit" class="btn btn-ghost">Clear report</button>
+  </form>
+</section>
+
 {% endblock %}

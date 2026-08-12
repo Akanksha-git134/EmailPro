@@ -36,6 +36,7 @@ from config import (
     SENT_LOG_CSV,
     SETTINGS_JSON,
     ALLOWED_ATTACHMENT_EXT,
+    PRESENTATION_PATH,
 )
 from utilis import (
     unique_emails,
@@ -52,7 +53,11 @@ from emailClassifier import classify_emails
 # APP CONFIG
 # --------------------------------------------------------------
 app = Flask(__name__)
-app.secret_key = "emailpro_secret_key"
+# Secret key is used to sign session/flash cookies — a hardcoded value
+# lets anyone who reads the source forge them. Load from FLASK_SECRET_KEY
+# in .env; fall back to a random key per-process if it isn't set (flash
+# messages will still work, they just won't survive a restart).
+app.secret_key = os.getenv("FLASK_SECRET_KEY") or os.urandom(32).hex()
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -273,7 +278,11 @@ def send_mail():
             recipients = recipients[:daily_limit]
             capped = True
 
-        # Handle optional attachment
+        # Handle attachment: a manually-uploaded file takes priority for
+        # this run, otherwise fall back to the configured company
+        # presentation (PRESENTATION_PATH) so every campaign still ships
+        # the presentation automatically, per spec, without requiring the
+        # operator to re-upload it each time.
         attachment_bytes = None
         attachment_name = None
         file = request.files.get("attachment")
@@ -284,6 +293,10 @@ def send_mail():
             else:
                 flash("Attachment type not supported.", "danger")
                 return redirect(url_for("send_mail"))
+        elif PRESENTATION_PATH and os.path.exists(PRESENTATION_PATH):
+            with open(PRESENTATION_PATH, "rb") as f:
+                attachment_bytes = f.read()
+            attachment_name = os.path.basename(PRESENTATION_PATH)
 
         sender_email = settings["email"] or EMAIL
         sender_pass = settings["app_password"] or APP_PASS
@@ -413,6 +426,28 @@ def report():
     )
 
 
+@app.route("/clear-report", methods=["POST"])
+def clear_report():
+    """Reset the on-screen report and, optionally, the persistent send
+    log — lets you clear out test-campaign results without them
+    blocking a future real send via "Skip Previously Sent Recipients"."""
+    global report_data
+    report_data = {
+        "total_emails": 0,
+        "success_count": 0,
+        "failed_count": 0,
+        "successful_emails": [],
+        "failed_emails": [],
+    }
+
+    if request.form.get("clear_sent_log"):
+        if os.path.exists(SENT_LOG_CSV):
+            os.remove(SENT_LOG_CSV)
+
+    flash("Report cleared.", "success")
+    return redirect(url_for("report"))
+
+
 @app.route("/download-report")
 def download_report():
     output = io.StringIO()
@@ -476,4 +511,9 @@ def settings_page():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    # debug=True enables the Werkzeug interactive debugger, which allows
+    # arbitrary code execution from the browser if the app is ever reachable
+    # over a network — off by default, opt in locally via FLASK_DEBUG=1.
+    debug_mode = os.getenv("FLASK_DEBUG", "0") == "1"
+    port = int(os.getenv("PORT", "5000"))
+    app.run(host="0.0.0.0", debug=debug_mode, port=port)

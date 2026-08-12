@@ -24,10 +24,13 @@ secret_key = os.getenv("GEMINI_API_KEY", "")
 
 # --- Run configuration ---
 DEFAULT_SUBJECT = os.getenv("DEFAULT_SUBJECT", "Singing Bowl Product Presentation")
+# .env files store plain text, so a literal \n typed there arrives as the two
+# characters backslash-n, not a real line break — convert it explicitly so
+# multi-line default messages actually render with line breaks in the email.
 DEFAULT_MESSAGE = os.getenv(
     "DEFAULT_MESSAGE",
     "Hello,\n\nWe would like to introduce our Singing Bowl products.\n\nThank you.",
-)
+).replace("\\n", "\n")
 EMAIL_DELAY_SECONDS = int(os.getenv("EMAIL_DELAY_SECONDS", "5"))
 DAILY_SEND_LIMIT = int(os.getenv("DAILY_SEND_LIMIT", "100"))
 
